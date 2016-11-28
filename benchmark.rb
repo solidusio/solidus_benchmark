@@ -1,3 +1,4 @@
+ENV['RAILS_ENV'] = 'test'
 require './dummy/config/environment'
 require 'spree/testing_support/factories'
 require 'database_cleaner'
@@ -5,49 +6,106 @@ require 'database_cleaner'
 DatabaseCleaner.strategy = :truncation
 DatabaseCleaner.clean
 
-module Benchmark
-  module Solidus
-    def solidus(label, time: 5, warmup: 2, &block)
-      report = Benchmark.ips(time, warmup, true) do |x|
-        x.report(label, &block)
-      end
+class SolidusBenchmark
+  class Stddev
+    def initialize(samples)
+      @samples = samples
+    end
 
-      entry = report.entries.first
+    def mean
+      @mean ||= @samples.inject(:+) / @samples.length
+    end
 
-      gemspec = Gem::Specification.find_by_name("solidus")
-      version = gemspec.version.to_s
+    def variance
+      @samples.map do |sample|
+        v = (sample - mean)
+        v * v
+      end.inject(:+) / @samples.length
+    end
 
-      output = {
-        label: label,
-        version: version,
-        iterations_per_second: entry.ips,
-        iterations_per_second_standard_deviation: entry.stddev_percentage
-      }.to_json
-
-      puts output
+    def stddev
+      @stddev ||= Math.sqrt(variance)
     end
   end
-  extend Solidus
+
+  class Run
+  end
+
+  def initialize(label, &block)
+    @label = label
+
+    instance_exec(self, &block)
+
+    run!
+  end
+
+  def setup(&block)
+    @setup = block
+  end
+
+  def test(&block)
+    @test = block
+  end
+
+  def measure_once
+    run = Run.new
+    run.instance_exec(&@setup)
+
+    Benchmark.realtime do
+      run.instance_exec(&@test)
+    end
+  end
+
+  def measure_for(timeout, samples)
+    measurements = []
+    while measurements.length < samples && measurements.inject(0, :+) < timeout
+      measurements << measure_once
+    end
+    measurements
+  end
+
+  def run!
+    # Warmup
+    measure_once
+
+    # Take real measurements
+    measurements = measure_for(2, 10)
+
+    p measurements
+
+    gemspec = Gem::Specification.find_by_name("solidus")
+    version = gemspec.version.to_s
+
+    stats = Stddev.new(measurements)
+    output = {
+      label: @label,
+      solidus_version: version,
+      database: ActiveRecord::Base.connection.adapter_name,
+      mean: stats.mean,
+      stddev: stats.stddev
+    }.to_json
+
+    puts output
+  end
 end
 
-DatabaseCleaner.cleaning do
-  FactoryGirl.create(:order_with_line_items)
-  Benchmark.solidus "refresh_rates" do
+SolidusBenchmark.new "refresh_rates" do
+  setup do
+    FactoryGirl.create(:order_with_line_items)
+  end
+
+  test do
     Spree::Shipment.last.refresh_rates
   end
 end
 
 [1, 10].each do |item_count|
-  DatabaseCleaner.cleaning do
-    FactoryGirl.create(:order_with_line_items, line_items_count: item_count)
-    Benchmark.solidus "update incomplete order with #{item_count} items" do
-      Spree::Order.first.update!
+  SolidusBenchmark.new "update incomplete order with #{item_count} items" do
+    setup do
+      FactoryGirl.create(:order_with_line_items, line_items_count: item_count)
     end
-  end
 
-  DatabaseCleaner.cleaning do
-    FactoryGirl.create(:completed_order_with_totals, line_items_count: item_count)
-    Benchmark.solidus "update completed order with #{item_count} items" do
+    test do
       Spree::Order.first.update!
     end
   end
