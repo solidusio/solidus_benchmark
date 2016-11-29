@@ -63,9 +63,9 @@ class SolidusBenchmark
     end
   end
 
-  def measure_for(timeout, samples)
+  def measure_for(timeout)
     measurements = []
-    while measurements.length < samples && measurements.inject(0, :+) < timeout
+    while measurements.length && measurements.inject(0, :+) < timeout
       measurements << measure_once
     end
     measurements
@@ -78,10 +78,10 @@ class SolidusBenchmark
     @instance.instance_exec(&@setup)
 
     # Warmup
-    measure_once
+    measure_for(1)
 
     # Take real measurements
-    measurements = measure_for(2, 10)
+    measurements = measure_for(5)
 
     DatabaseCleaner.clean
 
@@ -96,6 +96,7 @@ class SolidusBenchmark
       rails_version: Rails.version,
       database: ActiveRecord::Base.connection.adapter_name,
       mean: stats.mean,
+      iterations: measurements.count,
       stddev: stats.stddev
     }.to_json
 
