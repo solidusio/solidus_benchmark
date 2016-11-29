@@ -7,7 +7,7 @@ task :test_app do
   require 'spree/testing_support/common_rake'
 
   ENV['LIB_NAME'] = 'solidus'
-  ENV['DUMMY_PATH'] = 'dummy'
+  ENV['DUMMY_PATH'] = 'test_app/dummy'
 
   Rake::Task["common:test_app"].invoke
 end
