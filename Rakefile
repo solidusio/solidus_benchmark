@@ -2,16 +2,14 @@ ENV["RAILS_ENV"] = 'test'
 
 $LOAD_PATH << File.expand_path('../lib', __FILE__)
 
-require 'generators/spree/install/install_generator'
-require 'generators/spree/dummy/dummy_generator'
+require 'spree/testing_support/common_rake'
 
 desc "Generates a dummy app for testing"
 task :test_app do
+  ENV['LIB_NAME'] = 'solidus'
   ENV['DUMMY_PATH'] = 'dummy'
 
-  # --lib-name=rails is a hack to require nothing
-  Spree::DummyGenerator.start ["--lib-name=rails", "--quiet"]
-  Spree::InstallGenerator.start ["--auto-accept", "--migrate=true", "--seed=false", "--sample=false", "--quiet"]
+  Rake::Task["common:test_app"].invoke
 end
 
 task :benchmark do
