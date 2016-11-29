@@ -1,6 +1,3 @@
-
-require './dummy/config/environment'
-require 'spree/testing_support/factories'
 require 'database_cleaner'
 
 DatabaseCleaner.strategy = :truncation
