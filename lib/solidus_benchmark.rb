@@ -37,6 +37,15 @@ class SolidusBenchmark
     run!
   end
 
+  def description(desc)
+    @description = desc
+  end
+
+  def note(note)
+    @notes ||= []
+    @notes << note
+  end
+
   # Specify a block that will be run once to pre-populate the database
   def setup(&block)
     @setup = block
@@ -97,7 +106,9 @@ class SolidusBenchmark
       database: ActiveRecord::Base.connection.adapter_name,
       mean: stats.mean,
       iterations: measurements.count,
-      stddev: stats.stddev
+      stddev: stats.stddev,
+      description: @description,
+      notes: @notes || []
     }.to_json
 
     puts output
