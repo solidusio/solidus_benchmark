@@ -72,12 +72,18 @@ class BenchmarkResultHTML < Struct.new(:measurements)
 <html>
 <head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.3/Chart.bundle.min.js"></script>
+<style>
+body {
+  max-width: 960px;
+  margin: auto;
+}
+</style>
 </head>
 <body>
 
 <h1>#{label}</h1>
 
-<canvas id="chart" width="400" height="100"></canvas>
+<canvas id="chart" width="400" height="200"></canvas>
 
 <script>
 var ctx = document.getElementById("chart");
