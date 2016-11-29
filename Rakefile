@@ -1,11 +1,11 @@
 ENV["RAILS_ENV"] = 'test'
 
-$LOAD_PATH << File.expand_path('../lib', __FILE__)
-
-require 'spree/testing_support/common_rake'
+require 'bundler'
 
 desc "Generates a dummy app for testing"
 task :test_app do
+  require 'spree/testing_support/common_rake'
+
   ENV['LIB_NAME'] = 'solidus'
   ENV['DUMMY_PATH'] = 'dummy'
 
@@ -13,7 +13,7 @@ task :test_app do
 end
 
 task :benchmark do
-  load './benchmark.rb'
+  sh 'ruby ./benchmark.rb'
 end
 
 namespace :benchmark do
