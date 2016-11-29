@@ -95,6 +95,8 @@ class SolidusBenchmark
     output = {
       label: @label,
       solidus_version: version,
+      ruby_version: RUBY_VERSION,
+      rails_version: Rails.version,
       database: ActiveRecord::Base.connection.adapter_name,
       mean: stats.mean,
       stddev: stats.stddev
