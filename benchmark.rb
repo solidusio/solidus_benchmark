@@ -3,6 +3,7 @@ $LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
 
 require './test_app/dummy/config/environment'
 require 'solidus_benchmark'
+require 'ffaker'
 require 'spree/testing_support/factories'
 
 SolidusBenchmark.new "core/refresh_rates" do
