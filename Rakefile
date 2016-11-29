@@ -13,7 +13,8 @@ task :test_app do
 end
 
 task :benchmark do
-  sh 'ruby ./benchmark.rb'
+  benchmarks = Dir['./suite/**/*_benchmark.rb']
+  system 'ruby', '-Isuite', *(benchmarks.map{|x| "-r#{x}"}), '-e', ''
 end
 
 namespace :benchmark do
