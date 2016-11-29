@@ -1,8 +1,8 @@
 ENV['RAILS_ENV'] = 'test'
 $LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
 
-require 'solidus_benchmark'
 require './dummy/config/environment'
+require 'solidus_benchmark'
 require 'spree/testing_support/factories'
 
 SolidusBenchmark.new "core/refresh_rates" do
