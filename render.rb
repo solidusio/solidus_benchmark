@@ -146,7 +146,12 @@ var options = {
         var measurement = data.datasets[tooltipItem.datasetIndex].fullData[tooltipItem.index];
         return [
           "mean: " + (measurement.mean*1000).toFixed(2) + "ms",
-          "stddev: " + (measurement.stddev*1000).toFixed(2) + "ms"]
+          "stddev: " + (measurement.stddev*1000).toFixed(2) + "ms",
+          "",
+          "iterations: " + measurement.iterations + " in " + (measurement.iterations * measurement.mean).toFixed(2) + "s",
+          "ruby version: " + measurement.ruby_version,
+          "rails version: " + measurement.rails_version,
+        ]
       }
     }
   }
