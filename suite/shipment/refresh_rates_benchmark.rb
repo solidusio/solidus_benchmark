@@ -1,6 +1,6 @@
 require 'benchmark_helper'
 
-SolidusBenchmark.new "core/refresh_rates" do
+SolidusBenchmark.new "shipment/refresh_rates" do
   description %q{This benchmark measures the speed of `ShippingMethod#refresh_rates`, which estimates and creates shipping rates for a shipment.}
   note "As of Solidus 1.3, taxes are calculated as part of shipping rate estimation"
 
