@@ -99,9 +99,15 @@ body {
   max-width: 960px;
   margin: auto;
 }
+
+a {
+  text-decoration: none;
+}
 </style>
 </head>
 <body>
+
+<a href="/">« all benchmarks</a>
 
 <h1>#{label}</h1>
 
