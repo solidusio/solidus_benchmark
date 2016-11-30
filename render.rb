@@ -177,6 +177,16 @@ class BenchmarkIndexHTML < Struct.new(:benchmarks)
     <<-HTML
 <html>
 <head>
+<style>
+body {
+  max-width: 960px;
+  margin: auto;
+}
+
+a {
+  text-decoration: none;
+}
+</style>
 </head>
 <body>
 <h1>Solidus Benchmarks</h1>
