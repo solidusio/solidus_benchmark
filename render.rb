@@ -67,6 +67,25 @@ class BenchmarkResultHTML < Struct.new(:measurements)
     get_measurement(attributes)['mean'] * 1000
   end
 
+  def description
+    measurements[0]['description']
+  end
+
+  def notes
+    measurements[0]['notes']
+  end
+
+  def description_html
+    "<p>#{description}</p>"
+  end
+
+  def notes_html
+    return if !notes || notes.empty?
+    "<h3>Notes</h3><ul>" + notes.map do |note|
+      "<li>#{note}</li>"
+    end.join + "</ul>"
+  end
+
   def html
     <<-HTML
 <html>
@@ -83,7 +102,11 @@ body {
 
 <h1>#{label}</h1>
 
+#{description_html}
+
 <canvas id="chart" width="400" height="200"></canvas>
+
+#{notes_html}
 
 <script>
 var ctx = document.getElementById("chart");
