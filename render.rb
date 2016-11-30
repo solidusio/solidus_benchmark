@@ -29,7 +29,10 @@ class BenchmarkResultHTML < Struct.new(:measurements)
           label: database,
           backgroundColor: DATABASE_COLOURS[database],
           data: values_for(:solidus_version).map do |version|
-            get_mean(solidus_version: version, database: database)
+            get_attr(:mean, solidus_version: version, database: database) * 1000.0
+          end,
+          fullData: values_for(:solidus_version).map do |version|
+            get_measurement(solidus_version: version, database: database)
           end
         }
       end
@@ -63,8 +66,8 @@ class BenchmarkResultHTML < Struct.new(:measurements)
     measurements[0]
   end
 
-  def get_mean(attributes)
-    get_measurement(attributes)['mean'] * 1000
+  def get_attr(attr, attributes)
+    get_measurement(attributes)[attr.to_s]
   end
 
   def description
@@ -114,18 +117,33 @@ var ctx = document.getElementById("chart");
 var data = #{JSON.dump(chart_data)};
 
 var options = {
-    scales: {
-        yAxes: [{
-            display: true,
-            ticks: {
-                beginAtZero: true
-            },
-            scaleLabel: {
-              display: true,
-              labelString: "milliseconds"
-            }
-        }]
+  scales: {
+    yAxes: [{
+      display: true,
+      ticks: {
+        beginAtZero: true
+      },
+      scaleLabel: {
+        display: true,
+        labelString: "milliseconds"
+      }
+    }]
+  },
+
+  tooltips: {
+    callbacks: {
+      title: function (tooltipItem, data) {
+        var measurement = data.datasets[tooltipItem[0].datasetIndex].fullData[tooltipItem[0].index];
+        return ["Solidus " + measurement.solidus_version, measurement.database];
+      },
+      label: function (tooltipItem, data) {
+        var measurement = data.datasets[tooltipItem.datasetIndex].fullData[tooltipItem.index];
+        return [
+          "mean: " + (measurement.mean*1000).toFixed(2) + "ms",
+          "stddev: " + (measurement.stddev*1000).toFixed(2) + "ms"]
+      }
     }
+  }
 };
 
 var myBarChart = new Chart(ctx, {
