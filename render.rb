@@ -94,6 +94,7 @@ class BenchmarkResultHTML < Struct.new(:measurements)
 <html>
 <head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.3/Chart.bundle.min.js"></script>
+<title>#{label} - Solidus Benchmark</title>
 <style>
 body {
   max-width: 960px;
@@ -182,6 +183,7 @@ class BenchmarkIndexHTML < Struct.new(:benchmarks)
     <<-HTML
 <html>
 <head>
+<title>Solidus Benchmark</title>
 <style>
 body {
   max-width: 960px;
