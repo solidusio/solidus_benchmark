@@ -19,7 +19,12 @@ require 'benchmark_helper'
     note "As of Solidus 2.1, taxes are calculated as part of every order.update!"
 
     setup do
-      @order = FactoryGirl.create(:order_with_line_items, line_items_count: item_count).reload
+      FactoryGirl.create(:order_with_line_items, line_items_count: item_count).reload
+    end
+
+    before do
+      @order = Spree::Order.first
+      @order.update!
     end
 
     measure do
