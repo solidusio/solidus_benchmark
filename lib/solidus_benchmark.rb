@@ -105,7 +105,6 @@ class SolidusBenchmark
     fidelity = fidelity /= 500 # we would like to see ~500 datapoints
     fidelity = [fidelity, 0.05].max # sampling seems to hang beyond this
     fidelity = [fidelity, 0.5].min # don't go slower than the default
-    p fidelity
     FileUtils.mkdir_p(profile_dir)
     measure_with do |runner|
       StackProf.run(mode: :wall, out: "#{profile_dir}/stackprof-wall.dump", interval: (fidelity * 1000).to_i, &runner)
