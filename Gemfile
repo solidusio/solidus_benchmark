@@ -10,3 +10,6 @@ gem 'factory_girl'
 gem 'sqlite3'
 gem 'pg'
 gem 'mysql2'
+
+gem 'stackprof'
+gem 'flamegraph'
