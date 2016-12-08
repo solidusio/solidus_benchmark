@@ -46,7 +46,8 @@ class BenchmarkResultHTML < Struct.new(:measurements)
           label: database,
           backgroundColor: DATABASE_COLOURS[database],
           data: values_for(:solidus_version).map do |version|
-            get_attr(:mean, solidus_version: version, database: database) * 1000.0
+            mean = get_attr(:mean, solidus_version: version, database: database)
+            mean && mean * 1000.0
           end,
           fullData: values_for(:solidus_version).map do |version|
             get_measurement(solidus_version: version, database: database)
@@ -84,7 +85,8 @@ class BenchmarkResultHTML < Struct.new(:measurements)
   end
 
   def get_attr(attr, attributes)
-    get_measurement(attributes)[attr.to_s]
+    measurement = get_measurement(attributes)
+    measurement && measurement[attr.to_s]
   end
 
   def description
