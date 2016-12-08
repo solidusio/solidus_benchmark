@@ -1,7 +1,15 @@
 source 'https://rubygems.org'
 
-branch = ENV.fetch('SOLIDUS_BRANCH', 'master')
-gem "solidus", github: "solidusio/solidus", branch: branch
+solidus_branch = ENV.fetch('SOLIDUS_BRANCH', 'master')
+solidus_ref = ENV['SOLIDUS_REF']
+solidus_path = ENV['SOLIDUS_PATH']
+if solidus_path
+  gem "solidus", path: solidus_path
+elsif solidus_ref
+  gem "solidus", git: "https://github.com/solidusio/solidus.git", ref: solidus_ref
+else
+  gem "solidus", git: "https://github.com/solidusio/solidus.git", branch: solidus_branch
+end
 
 gem 'pry'
 gem 'database_cleaner'
