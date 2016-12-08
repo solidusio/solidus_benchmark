@@ -3,9 +3,6 @@ require 'fileutils'
 require 'stackprof'
 require 'flamegraph'
 
-DatabaseCleaner.strategy = :truncation
-DatabaseCleaner.clean
-
 class SolidusBenchmark
   class Stddev
     def initialize(samples)

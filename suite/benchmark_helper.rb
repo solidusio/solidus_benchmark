@@ -7,3 +7,6 @@ require 'ffaker'
 require 'spree/testing_support/factories'
 
 ActionController::Base.perform_caching = true
+
+DatabaseCleaner.strategy = :truncation
+DatabaseCleaner.clean
