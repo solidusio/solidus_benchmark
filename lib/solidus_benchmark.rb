@@ -110,6 +110,14 @@ class SolidusBenchmark
       StackProf.run(mode: :cpu, out: "#{profile_dir}/stackprof-cpu.dump", interval: (fidelity * 1000).to_i, &runner)
     end
     measure_with do |runner|
+      File.open("#{profile_dir}/activerecord.sql", 'w') do |f|
+        old_logger = ActiveRecord::Base.logger
+        ActiveRecord::Base.logger = ActiveSupport::Logger.new(f)
+        runner.call
+        ActiveRecord::Base.logger = old_logger
+      end
+    end
+    measure_with do |runner|
       Flamegraph.generate("#{profile_dir}/flamegraph.html", {fidelity: fidelity}, &runner)
     end
 
