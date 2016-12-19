@@ -4,7 +4,8 @@ SolidusBenchmark.new "order/full_checkout" do
   description %Q{A complete checkout of a simple order using only models}
 
   setup do
-    FactoryGirl.create(:state)
+    state = FactoryGirl.create(:state)
+    country = state.country
     global_zone = FactoryGirl.create(:global_zone)
 
     @store = FactoryGirl.create(:store)
@@ -13,7 +14,7 @@ SolidusBenchmark.new "order/full_checkout" do
 
     FactoryGirl.create(:tax_rate, tax_category_id: @variant.tax_category.id, zone: global_zone)
 
-    @address_attributes = FactoryGirl.attributes_for(:ship_address)
+    @address_attributes = FactoryGirl.attributes_for(:ship_address, state_id: state.id, country_id: country.id)
     @payment_method = FactoryGirl.create(:credit_card_payment_method)
     @source_attributes = FactoryGirl.attributes_for(:credit_card)
   end
@@ -34,6 +35,7 @@ SolidusBenchmark.new "order/full_checkout" do
       ship_address_attributes: @address_attributes,
       bill_address_attributes: @address_attributes
     }
+    order.save!
     order.next!
 
     # Delivery
@@ -46,6 +48,7 @@ SolidusBenchmark.new "order/full_checkout" do
       payment_method_id: @payment_method.id,
       source: Spree::CreditCard.new(@source_attributes)
     )
+    order.save!
     order.next!
 
     # Confirm
