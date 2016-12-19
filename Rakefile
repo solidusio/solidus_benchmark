@@ -21,9 +21,9 @@ namespace :benchmark do
   task :all do
     mkdir_p 'data'
     Bundler.with_clean_env do
-      databases = ENV.fetch('DATABASES', 'mysql postgres').split(' ')
+      databases = ENV.fetch('DATABASES', 'mysql postgres').split(/[ ,]/)
       databases.each do |db|
-        branches = ENV.fetch('BRANCHES', 'v1.0 v1.1 v1.2 v1.3 v1.4 v2.1 v2.0 v2.1 master').split(' ')
+        branches = ENV.fetch('BRANCHES', 'v1.0 v1.1 v1.2 v1.3 v1.4 v2.1 v2.0 v2.1 master').split(/[ ,]/)
         branches.each do |branch|
           ENV['DB'] = db
           ENV['SOLIDUS_BRANCH'] = branch
