@@ -7,6 +7,7 @@ require 'ffaker'
 require 'spree/testing_support/factories'
 
 ActionController::Base.perform_caching = true
+ActionController::Base.allow_forgery_protection = false
 Rails.application.config.active_job.queue_adapter = :test
 
 DatabaseCleaner.strategy = :truncation

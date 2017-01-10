@@ -10,6 +10,7 @@ task :test_app do
   ENV['DUMMY_PATH'] = 'test_app/dummy'
 
   Rake::Task["common:test_app"].invoke
+  cp 'config/environments/production.rb', 'config/environments/test.rb'
 end
 
 task :benchmark do
