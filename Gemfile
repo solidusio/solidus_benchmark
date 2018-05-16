@@ -17,8 +17,8 @@ gem 'factory_girl'
 gem 'rack-test'
 
 gem 'sqlite3'
-gem 'pg'
-gem 'mysql2'
+gem 'mysql2', '~> 0.4.10', require: false
+gem 'pg', '~> 0.21', require: false
 
 gem 'stackprof'
 gem 'flamegraph'
