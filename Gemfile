@@ -22,3 +22,4 @@ gem 'pg', '~> 0.21', require: false
 
 gem 'stackprof'
 gem 'flamegraph'
+gem 'ffaker'
