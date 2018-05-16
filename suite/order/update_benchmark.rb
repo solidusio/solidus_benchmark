@@ -10,7 +10,12 @@ require 'benchmark_helper'
     end
 
     measure do
-      Spree::Order.first.update!
+      order = Spree::Order.first
+      if order.respond_to?(:recalculate)
+        order.recalculate
+      else
+        order.update!
+      end
     end
   end
 
@@ -24,11 +29,19 @@ require 'benchmark_helper'
 
     before do
       @order = Spree::Order.first
-      @order.update!
+      if @order.respond_to?(:recalculate)
+        @order.recalculate
+      else
+        @order.update!
+      end
     end
 
     measure do
-      @order.update!
+      if @order.respond_to?(:recalculate)
+        @order.recalculate
+      else
+        @order.update!
+      end
     end
   end
 end
