@@ -13,7 +13,7 @@ end
 
 gem 'pry'
 gem 'database_cleaner'
-gem 'factory_girl'
+gem 'factory_bot'
 gem 'rack-test'
 
 gem 'sqlite3'
