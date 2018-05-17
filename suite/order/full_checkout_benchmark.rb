@@ -12,7 +12,7 @@ SolidusBenchmark.new "order/full_checkout" do
     @variant = FactoryGirl.create(:variant).reload
     FactoryGirl.create(:shipping_method, zones: [global_zone])
 
-    FactoryGirl.create(:tax_rate, tax_category_id: @variant.tax_category.id, zone: global_zone)
+    FactoryGirl.create(:tax_rate, tax_category: @variant.tax_category, zone: global_zone)
 
     @address_attributes = FactoryGirl.attributes_for(:ship_address, state_id: state.id, country_id: country.id)
     @payment_method = FactoryGirl.create(:credit_card_payment_method)
